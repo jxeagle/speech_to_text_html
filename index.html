@@ -65,25 +65,19 @@ var start_timestamp;
   recognition.onerror = function(event) {
     if (event.error == 'no-speech') {
       start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif';
-      ignore_onend = true;
     }
     if (event.error == 'audio-capture') {
       start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif';
-      ignore_onend = true;
     }
     if (event.error == 'not-allowed') {
       if (event.timeStamp - start_timestamp < 100) {
       } else {
       }
-      ignore_onend = true;
     }
   };
 
   recognition.onend = function() {
     recognizing = false;
-    if (ignore_onend) {
-      return;
-    }
     start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif';
     if (!final_transcript) {
       return;
@@ -107,9 +101,6 @@ var start_timestamp;
     }
     final_span.innerHTML = final_transcript;
     interim_span.innerHTML = interim_transcript;
-    if (final_transcript || interim_transcript) {
-      showButtons('inline-block');
-    }
   };
 
 function startButton(event) {
@@ -120,20 +111,10 @@ function startButton(event) {
   final_transcript = '';
   recognition.lang = 'cmn-Hans-CN';
   recognition.start();
-  ignore_onend = false;
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
   start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic-slash.gif';
-  showButtons('none');
   start_timestamp = event.timeStamp;
-}
-
-var current_style;
-function showButtons(style) {
-  if (style == current_style) {
-    return;
-  }
-  current_style = style;
 }
     </script>
   </body>
