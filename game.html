@@ -1,0 +1,51 @@
+<html>
+  <head>
+
+  </head>
+  <body>
+
+    <div id="results">
+      <span class="final" id="final_span"></span>
+      <span class="interim" id="interim_span"></span>
+    </div>
+
+    <script>
+      var final_transcript = '';
+      var recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'cmn-Hans-CN';
+
+      recognition.onstart = function() {
+        console.log("speech recognition started")
+      };
+
+
+      recognition.onresult = function(event) {
+        console.log(event);
+        var interim_transcript = '';
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final_transcript += event.results[i][0].transcript;
+          } else {
+            interim_transcript += event.results[i][0].transcript;
+          }
+        }
+        final_span.innerHTML = final_transcript;
+        interim_span.innerHTML = interim_transcript;
+      };
+
+      recognition.onend = function() {
+        console.log("speech recognition ended")
+      };
+
+      recognition.onerror = function(event) {
+        console.log("speech recognition error")
+        console.log(event);
+      };
+
+      recognition.start()
+
+    </script>
+  </body>
+</html>
