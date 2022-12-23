@@ -50,7 +50,6 @@ a.c1 {font-weight: normal;}
 
 var final_transcript = '';
 var recognizing = false;
-var ignore_onend;
 var start_timestamp;
   start_button.style.display = 'inline-block';
   var recognition = new webkitSpeechRecognition();
@@ -70,9 +69,6 @@ var start_timestamp;
       start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif';
     }
     if (event.error == 'not-allowed') {
-      if (event.timeStamp - start_timestamp < 100) {
-      } else {
-      }
     }
   };
 
