@@ -34,12 +34,12 @@
         ["A", "一", "s", ],
         ["2", "二"],
         ["3", "三"],
-        ["4", "四"],
+        ["4", "四", "似"],
         ["5", "五"],
         ["6", "六"],
-        ["7", "七"],
-        ["8", "八"],
-        ["9", "九"],
+        ["7", "七", "漆"],
+        ["8", "八", "吧"],
+        ["9", "九", "酒"],
         ["10", "十"],
         ["J", "Jack", "坑", "乔", "给"],
         ["Q", "P", "Queen", "皮蛋"],
@@ -70,28 +70,31 @@
         return pairs;
       }
 
-      pairs = getRandomPairs();
-      console.log(pairs);
-      // remove all elements under cards
-      document.querySelector(".cards").innerHTML = "";
-      // add new elements
-      for (let i = 0; i < 5; i++) {
-        let rank = pairs[i][0][1][0];
-        let suit = pairs[i][1][1][0];
-        let card = document.createElement("section");
-        card.className = "card card--" + suit;
-        card.setAttribute("value", rank);
-        card.innerHTML = `
-          <div class="card__inner card__inner--centered">
-            <div class="card__column">
-              <div class="card__symbol"></div>
-              <div class="card__symbol"></div>
+      function dealCards() {
+        pairs = getRandomPairs();
+        console.log(pairs);
+        // remove all elements under cards
+        document.querySelector(".cards").innerHTML = "";
+        // add new elements
+        for (let i = 0; i < 5; i++) {
+          let rank = pairs[i][0][1][0];
+          let suit = pairs[i][1][1][0];
+          let card = document.createElement("section");
+          card.className = "card card--" + suit;
+          card.setAttribute("value", rank);
+          card.innerHTML = `
+            <div class="card__inner card__inner--centered">
+              <div class="card__column">
+                <div class="card__symbol"></div>
+                <div class="card__symbol"></div>
+              </div>
             </div>
-          </div>
-        `;
-        document.querySelector(".cards").appendChild(card);
-      }
+          `;
+          document.querySelector(".cards").appendChild(card);
+        }
+      };
 
+      dealCards()
     </script>
 
     <script>
@@ -103,13 +106,20 @@
 
       function process_command(command) {
         console.log('command received: ' + command);
-        if (command === '开始') {
+        // if command ends with '开始'
+        if (command.endsWith('开始')) {
           console.log('开始');
           let cards = document.querySelectorAll(".card");
           for (let i = 0; i < cards.length; i++) {
-           hideCard(i);
+            hideCard(i);
           }
-        } else {
+          return
+        }
+        else if (command.endsWith('再来一次')) {
+          dealCards();
+          return
+        }
+        else {
 
         }
       }
