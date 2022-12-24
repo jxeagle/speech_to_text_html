@@ -102,18 +102,19 @@
       recognition.lang = 'cmn-Hans-CN';
 
       function process_command(command) {
+        console.log('command received: ' + command);
         if (command === '开始') {
           console.log('开始');
           let cards = document.querySelectorAll(".card");
           for (let i = 0; i < cards.length; i++) {
-            flipCard(i);
+           hideCard(i);
           }
         } else {
 
         }
       }
 
-      function flipCard(i) {
+      function hideCard(i) {
         let cards = document.querySelectorAll(".card");
         cards[i].classList.add("card--flipped");
       }
