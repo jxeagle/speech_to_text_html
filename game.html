@@ -27,30 +27,11 @@
     <h1 class="title">Flexbox layout for ♥ and ♠</h1>
 
     <section class="cards">
-      <!-- 2 -->
-      <section class="card card--heart" value="2">
-        <div class="card__inner card__inner--centered">
-          <div class="card__column">
-            <div class="card__symbol"></div>
-            <div class="card__symbol"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2 -->
-      <section class="card card--club" value="J">
-        <div class="card__inner card__inner--centered">
-          <div class="card__column">
-            <div class="card__symbol"></div>
-            <div class="card__symbol"></div>
-          </div>
-        </div>
-      </section>
     </section>
 
     <script>
       let ranks = [
-        ["1", "一", "s", ],
+        ["A", "一", "s", ],
         ["2", "二"],
         ["3", "三"],
         ["4", "四"],
@@ -61,7 +42,7 @@
         ["9", "九"],
         ["10", "十"],
         ["J", "Jack", "坑", "乔", "给"],
-        ["P", "Queen", "皮蛋"],
+        ["Q", "P", "Queen", "皮蛋"],
         ["K", "k", "king", "老"],
       ];
       let suits = [
@@ -95,7 +76,7 @@
       document.querySelector(".cards").innerHTML = "";
       // add new elements
       for (let i = 0; i < 5; i++) {
-        let rank = pairs[i][0][0];
+        let rank = pairs[i][0][1][0];
         let suit = pairs[i][1][1][0];
         let card = document.createElement("section");
         card.className = "card card--" + suit;
