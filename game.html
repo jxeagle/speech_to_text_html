@@ -19,12 +19,11 @@
   </head>
   <body>
 
-    <div id="results">
+
+    <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;
       <span class="final" id="final_span"></span>
       <span class="interim" id="interim_span"></span>
-    </div>
-
-    <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;  </h1>
+    </h1>
 
     <section class="cards">
     </section>
@@ -104,7 +103,7 @@
       recognition.interimResults = true;
       recognition.lang = 'cmn-Hans-CN';
 
-      function process_command(command) {
+      function process_command(command, final) {
         console.log('command received: ' + command);
         // if command ends with '开始'
         if (command.endsWith('开始')) {
@@ -116,7 +115,10 @@
           return
         }
         else if (command.endsWith('再来一次')) {
-          dealCards();
+          if (final) {
+            console.log('再来一次');
+            dealCards();
+          }
           return
         }
         else {
@@ -139,10 +141,12 @@
         for (var i = event.resultIndex; i < event.results.length; ++i) {
           command = event.results[i][0].transcript
           if (event.results[i].isFinal) {
-            final_transcript += command;
-            process_command(command)
+            interim_transcript = '';
+            final_transcript = command;
+            process_command(command, true)
           } else {
-            process_command(command)
+            final_transcript = '';
+            process_command(command, false)
             interim_transcript += command;
           }
         }
