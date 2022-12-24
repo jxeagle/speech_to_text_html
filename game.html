@@ -49,7 +49,7 @@
         ["8", "八", "吧"],
         ["9", "九", "酒"],
         ["10", "十", "石", "是"],
-        ["J", "Jack", "坑", "乔", "给", "杰", "巧"],
+        ["J", "Jack", "坑", "乔", "给", "杰", "巧", "夹"],
         ["Q", "P", "Queen", "皮蛋"],
         ["K", "k", "king", "老"],
       ];
@@ -80,7 +80,6 @@
 
       function dealCards() {
         pairs = getRandomPairs();
-        console.log(pairs);
         // remove all elements under cards
         document.querySelector(".cards").innerHTML = "";
         // add new elements
@@ -100,21 +99,22 @@
           `;
           document.querySelector(".cards").appendChild(card);
         }
+
+        displayCards(pairs)
+
         return pairs;
       };
 
-      function displayCards() {
+      function displayCards(pairs) {
         // iterate through teh current pairs
-        for (let i = 0; i < currentPairs.length; i++) {
-          let rank = currentPairs[i][0][1][1];
-          let suit = currentPairs[i][1][1][1];
+        for (let i = 0; i < pairs.length; i++) {
+          let rank = pairs[i][0][1][1];
+          let suit = pairs[i][1][1][1];
           console.log(rank + suit)
         }
       }
 
       var currentPairs = dealCards()
-
-      displayCards()
 
     </script>
 
@@ -128,8 +128,9 @@
 
       var currentRank, currentSuit;
 
-      function process_command(command, final) {
-        console.log('command received: ' + command);
+      function process_command(command_orig, final) {
+        command = command_orig.slice(-4);
+        console.log('command received: ' + command_orig + ' ' + command, final);
         if (command.endsWith('开始')) {
           console.log('开始');
           let cards = document.querySelectorAll(".card");
@@ -183,7 +184,6 @@
             document.querySelector("#current_result").innerHTML = ranks[currentRank][0] + suits[currentSuit][1];
           }
 
-          console.log(currentPairs)
           // if the currentRank and currentSuit is one of currentPairs
           for (let i = 0; i < currentPairs.length; i++) {
             if (currentPairs[i][0][0] == currentRank && currentPairs[i][1][0] == currentSuit) {
@@ -212,7 +212,6 @@
       };
 
       recognition.onresult = function(event) {
-        console.log(event);
         var interim_transcript = '';
         for (var i = event.resultIndex; i < event.results.length; ++i) {
           command = event.results[i][0].transcript
