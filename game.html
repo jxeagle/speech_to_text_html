@@ -91,6 +91,25 @@
 
       pairs = getRandomPairs();
       console.log(pairs);
+      // remove all elements under cards
+      document.querySelector(".cards").innerHTML = "";
+      // add new elements
+      for (let i = 0; i < 5; i++) {
+        let rank = pairs[i][0][0];
+        let suit = pairs[i][1][1][0];
+        let card = document.createElement("section");
+        card.className = "card card--" + suit;
+        card.setAttribute("value", rank);
+        card.innerHTML = `
+          <div class="card__inner card__inner--centered">
+            <div class="card__column">
+              <div class="card__symbol"></div>
+              <div class="card__symbol"></div>
+            </div>
+          </div>
+        `;
+        document.querySelector(".cards").appendChild(card);
+      }
     </script>
 
     <script>
