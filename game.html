@@ -34,21 +34,21 @@
         ["2", "二"],
         ["3", "三"],
         ["4", "四", "似"],
-        ["5", "五"],
+        ["5", "五", "乌"],
         ["6", "六"],
         ["7", "七", "漆"],
         ["8", "八", "吧"],
         ["9", "九", "酒"],
-        ["10", "十"],
-        ["J", "Jack", "坑", "乔", "给"],
+        ["10", "十", "石", "是"],
+        ["J", "Jack", "坑", "乔", "给", "杰", "巧"],
         ["Q", "P", "Queen", "皮蛋"],
         ["K", "k", "king", "老"],
       ];
       let suits = [
-        ["spade", "梅", "梅花", "草花"],
-        ["diamond", "方", "方块"],
-        ["heart", "红", "红桃", "红心"],
-        ["club", "黑", "黑桃"],
+        ["spade", "黑"],
+        ["diamond", "方"],
+        ["heart", "红"],
+        ["club", "梅", "草", "花"],
       ];
     </script>
 
@@ -91,9 +91,10 @@
           `;
           document.querySelector(".cards").appendChild(card);
         }
+        return pairs;
       };
 
-      dealCards()
+      var currentPairs = dealCards()
     </script>
 
     <script>
@@ -102,6 +103,8 @@
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'cmn-Hans-CN';
+
+      var currentRank, currentSuit;
 
       function process_command(command, final) {
         console.log('command received: ' + command);
@@ -122,7 +125,34 @@
           return
         }
         else {
+          for (let i = 0; i < ranks.length; i++) {
+            for (let j =0; j < ranks[i].length; j++) {
+              if (command.includes(ranks[i][j])) {
+                currentRank = i;
+                break;
+              }
+            }
+          }
+          for (let i = 0; i < suits.length; i++) {
+            for (let j =0; j < suits[i].length; j++) {
+              if (command.includes(suits[i][j])) {
+                currentSuit = i;
+                break;
+              }
+            }
+          }
 
+          console.log(currentPairs)
+          // if the currentRank and currentSuit is one of currentPairs
+          for (let i = 0; i < currentPairs.length; i++) {
+            if (currentPairs[i][0][0] == currentRank && currentPairs[i][1][0] == currentSuit) {
+              hideCard(i);
+              break;
+            }
+          }
+          // console.log(currentPairs)
+
+          console.log(currentRank, currentSuit);
         }
       }
 
