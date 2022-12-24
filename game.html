@@ -103,7 +103,19 @@
         return pairs;
       };
 
+      function displayCards() {
+        // iterate through teh current pairs
+        for (let i = 0; i < currentPairs.length; i++) {
+          let rank = currentPairs[i][0][1][1];
+          let suit = currentPairs[i][1][1][1];
+          console.log(rank + suit)
+        }
+      }
+
       var currentPairs = dealCards()
+
+      displayCards()
+
     </script>
 
     <script>
@@ -175,7 +187,7 @@
           // if the currentRank and currentSuit is one of currentPairs
           for (let i = 0; i < currentPairs.length; i++) {
             if (currentPairs[i][0][0] == currentRank && currentPairs[i][1][0] == currentSuit) {
-              hideCard(i);
+              unhideCard(i);
               break;
             }
           }
@@ -188,6 +200,11 @@
       function hideCard(i) {
         let cards = document.querySelectorAll(".card");
         cards[i].classList.add("card--flipped");
+      }
+
+      function unhideCard(i) {
+        let cards = document.querySelectorAll(".card");
+        cards[i].classList.remove("card--flipped");
       }
 
       recognition.onstart = function() {
