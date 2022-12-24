@@ -23,7 +23,8 @@ body {
 .card:after {
   content: attr(value);
   position: absolute;
-  width: 12px;
+  width: 15px;
+  font-size: 45px;
   text-align: center;
   letter-spacing: -2px;
 }
