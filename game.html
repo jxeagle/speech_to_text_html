@@ -21,6 +21,7 @@
 
 
     <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;
+      <span class="final" id="current_result"></span>
       <span class="final" id="final_span"></span>
       <span class="interim" id="interim_span"></span>
     </h1>
@@ -45,10 +46,10 @@
         ["K", "k", "king", "老"],
       ];
       let suits = [
-        ["spade", "黑"],
-        ["diamond", "方"],
-        ["heart", "红"],
-        ["club", "梅", "草", "花"],
+        ["spade", "黑桃", "黑"],
+        ["diamond", "方块", "方"],
+        ["heart", "红心", "红"],
+        ["club", "梅花", "梅", "草", "花"],
       ];
     </script>
 
@@ -142,6 +143,11 @@
             }
           }
 
+          // set current_result base on lookup from ranks and suits
+          if (currentRank != undefined && currentSuit != undefined) {
+            document.querySelector("#current_result").innerHTML = ranks[currentRank][0] + suits[currentSuit][1];
+          }
+
           console.log(currentPairs)
           // if the currentRank and currentSuit is one of currentPairs
           for (let i = 0; i < currentPairs.length; i++) {
@@ -180,7 +186,7 @@
             interim_transcript += command;
           }
         }
-        final_span.innerHTML = final_transcript;
+        final_span.innerHTML = '(' + final_transcript + ')';
         interim_span.innerHTML = interim_transcript;
       };
 
