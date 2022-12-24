@@ -140,8 +140,8 @@
       };
 
       recognition.onend = function() {
+        console.log("speech recognition has ended after ending after 60 mins")
         recognition.start()
-        console.log("speech recognition has been restarted after ending after 60 mins")
       };
 
       recognition.onerror = function(event) {
