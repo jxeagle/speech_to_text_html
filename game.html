@@ -15,10 +15,18 @@
       #copy { margin-top: 20px; }
       #copy > div { display: none; margin: 0 70px; }
       a.c1 {font-weight: normal;}
-      </style>
+      .begin-countdown {text-align: center; display: none; font-size: 3em;}
+    </style>
+    <script src="countdown.js"></script>
   </head>
   <body>
 
+    <div class="row begin-countdown">
+      <div class="col-md-12 text-center">
+        <progress value="10" max="10" id="pageBeginCountdown"></progress>
+        <p><span id="pageBeginCountdownText">10 </span> 秒后可以开始回答</p>
+      </div>
+    </div>
 
     <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;
       <span class="final" id="current_result"></span>
@@ -104,15 +112,30 @@
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'cmn-Hans-CN';
+      var waiting = false;
 
       var currentRank, currentSuit;
 
       function process_command(command, final) {
         console.log('command received: ' + command);
-        // if command ends with '开始'
         if (command.endsWith('开始')) {
           console.log('开始');
           let cards = document.querySelectorAll(".card");
+
+          // show countdown div
+          if (!waiting) {
+            waiting=true;
+            document.querySelector(".begin-countdown").style.display = "block";
+            recognition.stop();
+            ProgressCountdown(10, 'pageBeginCountdown', 'pageBeginCountdownText')
+              .then(function (value) {
+                recognition.start()
+                console.log('Countdown finished!');
+                document.querySelector(".begin-countdown").style.display = "none";
+                waiting=false;
+              });
+          }
+
           for (let i = 0; i < cards.length; i++) {
             hideCard(i);
           }
@@ -190,9 +213,9 @@
         interim_span.innerHTML = interim_transcript;
       };
 
-      recognition.onend = function() {
+      recognition.onend = function(event) {
         console.log("speech recognition has ended after ending after 60 mins")
-        recognition.start()
+        // recognition.start()
       };
 
       recognition.onerror = function(event) {
