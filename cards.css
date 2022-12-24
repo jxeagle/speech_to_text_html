@@ -29,8 +29,8 @@ body {
   letter-spacing: -2px;
 }
 .card:before {
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 6px;
 }
 .card:after {
   bottom: 4px;
@@ -127,4 +127,10 @@ body {
   font: 18px 'Trebuchet MS';
   color: #444;
   text-align: center;
+}
+
+.card--flipped {
+  background-color: #2980b9;
+  color: 2980b9;
+  transform: rotateY(180deg);
 }

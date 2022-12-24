@@ -91,6 +91,7 @@
         `;
         document.querySelector(".cards").appendChild(card);
       }
+
     </script>
 
     <script>
@@ -100,18 +101,38 @@
       recognition.interimResults = true;
       recognition.lang = 'cmn-Hans-CN';
 
+      function process_command(command) {
+        if (command === '开始') {
+          console.log('开始');
+          let cards = document.querySelectorAll(".card");
+          for (let i = 0; i < cards.length; i++) {
+            flipCard(i);
+          }
+        } else {
+
+        }
+      }
+
+      function flipCard(i) {
+        let cards = document.querySelectorAll(".card");
+        cards[i].classList.add("card--flipped");
+      }
+
       recognition.onstart = function() {
-        console.log("speech recognition started")
+        console.log("speech recognition started");
       };
 
       recognition.onresult = function(event) {
         console.log(event);
         var interim_transcript = '';
         for (var i = event.resultIndex; i < event.results.length; ++i) {
+          command = event.results[i][0].transcript
           if (event.results[i].isFinal) {
-            final_transcript += event.results[i][0].transcript;
+            final_transcript += command;
+            process_command(command)
           } else {
-            interim_transcript += event.results[i][0].transcript;
+            process_command(command)
+            interim_transcript += command;
           }
         }
         final_span.innerHTML = final_transcript;
@@ -119,7 +140,8 @@
       };
 
       recognition.onend = function() {
-        console.log("speech recognition ended")
+        recognition.start()
+        console.log("speech recognition has been restarted after ending after 60 mins")
       };
 
       recognition.onerror = function(event) {
@@ -128,6 +150,8 @@
       };
 
       recognition.start()
+
+
 
     </script>
   </body>
