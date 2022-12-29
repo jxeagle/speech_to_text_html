@@ -1,0 +1,27 @@
+{
+  "tfjsSpeechCommandsVersion": "0.2.2",
+  "modelName": "model-2022-12-27T03.14.46",
+  "timeStamp": "2022-12-27T08:16:26.048Z",
+  "wordLabels": [
+    "1",
+    "10",
+    "11",
+    "12",
+    "13",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "_background_noise_",
+    "club",
+    "diamond",
+    "heart",
+    "ready",
+    "spade",
+    "start"
+  ]
+}

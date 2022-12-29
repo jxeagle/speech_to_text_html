@@ -45,7 +45,9 @@
 
       const run = async () => {
         const recognizer = await speechCommands.create(
-          'BROWSER_FFT');
+          'BROWSER_FFT', undefined,
+          'http://localhost:5500/model/play-cards.json',
+          'http://localhost:5500/model/play-cards.metadata.json');
         await recognizer.ensureModelLoaded();
         console.log(recognizer.wordLabels());
         console.log('model loaded')
