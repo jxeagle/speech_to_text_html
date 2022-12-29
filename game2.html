@@ -12,8 +12,17 @@
         <span class="final" id="final_span"></span>
         <span class="interim" id="interim_span"></span>
       </h1>
-      <section class="cards">
-      </section>
+
+      <div class="cards">
+        <section :class="'card card--' + card.suit" :value=card.display v-for="card in cards">
+          <div class="card__inner card__inner--centered">
+            <div class="card__column">
+              <div class="card__symbol"></div>
+              <div class="card__symbol"></div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
     <script src="//unpkg.com/jquery@3.1.1/dist/jquery.slim.min.js"></script>
     <script src="//unpkg.com/tether@1.4.0/dist/js/tether.min.js"></script>
@@ -30,10 +39,15 @@
       const deck = [];
       // from 1-13 and club,diamond,heart,spade, create a deck of cards
       for (let i = 1; i <= 13; i++) {
-        deck.push({ value: i, suit: 'club' });
-        deck.push({ value: i, suit: 'diamond' });
-        deck.push({ value: i, suit: 'heart' });
-        deck.push({ value: i, suit: 'spade' });
+        let display = i;
+        if (display === 1) display = 'A';
+        if (display === 11) display = 'J';
+        if (display === 12) display = 'Q';
+        if (display === 13) display = 'K';
+        deck.push({ value: i, display: display, suit: 'club', });
+        deck.push({ value: i, display: display, suit: 'diamond' });
+        deck.push({ value: i, display: display, suit: 'heart' });
+        deck.push({ value: i, display: display, suit: 'spade' });
       }
 
       const run = async () => {
@@ -70,15 +84,15 @@
           cards: [1],
         },
         methods: {
-          pick_cards: () => {
+          pick_cards: (app) => {
             // pick 5 distinct cards from the deck
             const shuffled = deck.sort(() => 0.5 - Math.random());
-            this.cards = shuffled.slice(0, 5);
-            console.log(this.cards)
+            app.cards = shuffled.slice(0, 5);
+            console.log(app.cards)
           }
         },
         mounted() {
-          this.pick_cards();
+          this.pick_cards(this);
           run();
           console.log('mounted');
         }
