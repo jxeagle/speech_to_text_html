@@ -36,13 +36,6 @@
         deck.push({ value: i, suit: 'spade' });
       }
 
-      const pick_cards = () => {
-        // pick 5 distinct cards from the deck
-        const shuffled = deck.sort(() => 0.5 - Math.random());
-        this.cards = shuffled.slice(0, 5);
-        console.log(this.cards)
-      }
-
       const run = async () => {
         const recognizer = await speechCommands.create(
           'BROWSER_FFT', undefined,
@@ -74,17 +67,22 @@
       var esg_nlp = new Vue({
         el: '#app',
         data: {
-          cards: [],
+          cards: [1],
         },
         methods: {
+          pick_cards: () => {
+            // pick 5 distinct cards from the deck
+            const shuffled = deck.sort(() => 0.5 - Math.random());
+            this.cards = shuffled.slice(0, 5);
+            console.log(this.cards)
+          }
         },
         mounted() {
-          pick_cards();
+          this.pick_cards();
           run();
           console.log('mounted');
         }
       });
-
     </script>
   </body>
 </html>
