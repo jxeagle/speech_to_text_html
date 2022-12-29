@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="cards.css">
+  </head>
+  <body>
+    <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;
+      <span class="final" id="current_result"></span>
+      <span class="final" id="final_span"></span>
+      <span class="interim" id="interim_span"></span>
+    </h1>
+    <section class="cards">
+    </section>
+    <script src="//unpkg.com/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
+    <script src="//unpkg.com/@tensorflow-models/speech-commands@0.5.4/dist/speech-commands.min.js"></script>
+
+    <script>
+      const run = async () => {
+        const recognizer = await speechCommands.create(
+          'BROWSER_FFT');
+        await recognizer.ensureModelLoaded();
+        console.log(recognizer.wordLabels());
+        console.log('model loaded')
+
+        recognizer.listen(result => {
+          // log the word with the highest score
+          const scores = result.scores;
+          const maxScoreIndex = scores.indexOf(Math.max(...scores));
+          const word = recognizer.wordLabels()[maxScoreIndex];
+          const score = scores[maxScoreIndex];
+
+          // log top 3 words with their scores
+          const top3 = Array.from(scores)
+            .map((s, i) => ({ score: s, word: recognizer.wordLabels()[i] }))
+            .sort((s1, s2) => s2.score - s1.score)
+          console.log(word, score);
+        }, {
+          includeSpectrogram: true,
+          probabilityThreshold: 0.93,
+          overlapFactor: 0.7
+        });
+      }
+      run();
+    </script>
+  </body>
+</html>
