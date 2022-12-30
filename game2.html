@@ -21,11 +21,15 @@
             </div>
           </section>
         </div>
-        <div class="col">
+        <div class="col" style="font-size: xx-large;">
           <ul>
             <li style="font-size: xx-large;">记住后说: "记好了"</li>
             <li style="font-size: xx-large;">做下一道题说: "下一个" </li>
           </ul>
+
+          <div class="alert alert-primary" role="alert">
+            {{currentRank?.command}} {{currentSuit?.command}}
+          </div>
 
           <div class="row begin-countdown" v-if=waiting>
             <div class="text-center">
@@ -67,8 +71,8 @@
         data: {
           recognizer: null,
           cards: [],
-          current_rank: null,
-          current_suit: null,
+          currentRank: {},
+          currentSuit: {},
           waiting: false,
         },
         methods: {
@@ -113,24 +117,24 @@
               // if the command is one of the suites
               if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
                 console.log('suit: ' + command)
-                app.current_suit = {command: command, tm: new Date()};
+                app.currentSuit = {command: command, tm: new Date()};
               } else {
                 console.log('rank: ' + command)
-                app.current_rank = {command: command, tm: new Date()};
+                app.currentRank = {command: command, tm: new Date()};
               }
-              // if the current_suit and current_rank are set and
+              // if the currentSuit and currentRank are set and
               // their tm are not off by more than 1 second, then it is an answer
-              if (app.current_suit && app.current_rank) {
-                if (Math.abs(app.current_suit.tm - app.current_rank.tm) < 2000) {
+              if (app.currentSuit && app.currentRank) {
+                if (Math.abs(app.currentSuit.tm - app.currentRank.tm) < 2000) {
                   // here we have an answer
                   // find its match in app.cards
-                  console.log('answer: ' + app.current_rank.command + ' ' + app.current_suit.command)
-                  const card = app.cards.find(card => card.suit === app.current_suit.command && card.value === app.current_rank.command);
+                  console.log('answer: ' + app.currentRank.command + ' ' + app.currentSuit.command)
+                  const card = app.cards.find(card => card.suit === app.currentSuit.command && card.value === app.currentRank.command);
                   if (card) {
                     card.hidden = false;
                   }
-                  app.current_suit = null;
-                  app.current_rank = null;
+                  app.currentSuit = null;
+                  app.currentRank = null;
                 }
               }
             }
