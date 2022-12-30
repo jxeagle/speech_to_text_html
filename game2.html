@@ -9,7 +9,7 @@
     <div id="app" class="container">
       <div class="row">
         <div class="cards col-12">
-          <section :class=card_class(card) :value=card.display v-for="card in cards">
+          <section :class=cardClass(card) :value=card.display v-for="card in cards">
             <div class="card__inner card__inner--centered">
               <div class="card__column">
                 <div class="card__symbol"></div>
@@ -31,7 +31,7 @@
               {{suitMap[currentSuit?.command]}}
             </span>
             <span class="alert alert-primary" role="alert">
-              {{currentRank?.command}}
+              {{rankDisplay(currentRank?.command)}}
             </span>
           </div>
 
@@ -59,13 +59,18 @@
 
     <script>
       const deck = [];
+      const suit_display = (suit_number) => {
+        let display = suit_number;
+        if (suit_number == 1) display = 'A';
+        if (suit_number == 11) display = 'J';
+        if (suit_number == 12) display = 'Q';
+        if (suit_number == 13) display = 'K';
+        return display;
+      }
+
       // from 1-13 and club,diamond,heart,spade, create a deck of cards
       for (let i = 1; i <= 13; i++) {
-        let display = i;
-        if (display === 1) display = 'A';
-        if (display === 11) display = 'J';
-        if (display === 12) display = 'Q';
-        if (display === 13) display = 'K';
+        let display = suit_display(i);
         deck.push({ value: '' + i, display: display, suit: 'club', });
         deck.push({ value: '' + i, display: display, suit: 'diamond' });
         deck.push({ value: '' + i, display: display, suit: 'heart' });
@@ -88,7 +93,10 @@
           },
         },
         methods: {
-          card_class: (card) => {
+          rankDisplay: (rank) => {
+            return suit_display(rank);
+          },
+          cardClass: (card) => {
             let classes = ['card', 'card--' + card.suit]
             if (card.hidden) {
               classes.push('card--flipped')
