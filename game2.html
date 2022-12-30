@@ -4,9 +4,6 @@
     <link type="text/css" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
     <link rel="stylesheet" href="cards.css">
-    <style>
-      .begin-countdown {text-align: center; font-size: 3em;}
-    </style>
   </head>
   <body>
     <div id="app" class="container">
@@ -22,21 +19,24 @@
           </section>
         </div>
         <div class="col" style="font-size: xx-large;">
-          <ul>
-            <li style="font-size: xx-large;">记住后说: "记好了"</li>
-            <li style="font-size: xx-large;">做下一道题说: "下一个" </li>
-          </ul>
-
-          <div class="alert alert-primary" role="alert">
-            {{currentRank?.command}} {{currentSuit?.command}}
+          <div>
+            <ul>
+              <li style="font-size: xx-large;">记住后说: "记好了"</li>
+              <li style="font-size: xx-large;">做下一道题说: "下一个" </li>
+            </ul>
           </div>
 
-          <div class="row begin-countdown" v-if=waiting>
+          <div class="alert alert-primary" role="alert">
+            {{currentCardDisplay}}
+          </div>
+
+          <div v-show=waiting>
             <div class="text-center">
               <progress value="10" max="10" id="pageBeginCountdown"></progress>
               <p><span id="pageBeginCountdownText">10 </span> 秒后可以开始回答</p>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -73,7 +73,14 @@
           cards: [],
           currentRank: {},
           currentSuit: {},
+          currentCardDisplay: '',
           waiting: false,
+          suitMap: {
+            'club': '梅花',
+            'diamond': '方块',
+            'heart': '红桃',
+            'spade': '黑桃',
+          },
         },
         methods: {
           card_class: (card) => {
@@ -114,6 +121,15 @@
 
               console.log('准备');
             } else {
+
+              // remove the outdated commands
+              if ( (app.currentSuit && app.currentSuit.tm < new Date() - 2000)) {
+                app.currentSuit = {};
+              }
+              if ( (app.currentRank && app.currentRank.tm < new Date() - 2000)) {
+                app.currentRank = {};
+              }
+
               // if the command is one of the suites
               if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
                 console.log('suit: ' + command)
@@ -122,6 +138,12 @@
                 console.log('rank: ' + command)
                 app.currentRank = {command: command, tm: new Date()};
               }
+
+              // set the display of the current word
+              if (app.currentSuit || app.currentRank) {
+                app.currentCardDisplay = (app.suitMap[app.currentSuit?.command] || '') + (app.currentRank?.command || '');
+              }
+
               // if the currentSuit and currentRank are set and
               // their tm are not off by more than 1 second, then it is an answer
               if (app.currentSuit && app.currentRank) {
