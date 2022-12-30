@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="app">
-      <h1 class="title">记住后说 "开始"; "再来一次" 做下一道题;
+      <h1 class="title">记住后说 "记好了"; "下一个" 做下一道题;
         <span class="final" id="current_result"></span>
         <span class="final" id="final_span"></span>
         <span class="interim" id="interim_span"></span>
@@ -64,7 +64,25 @@
             app.cards = shuffled.slice(0, 5);
             console.log(app.cards)
           },
-          init_recognizer: async () => {
+          add_command: (command, app) => {
+            if (command === 'start') {
+              console.log('开始');
+              app.pick_cards(esg_nlp);
+            } else if (command === 'ready') {
+              console.log('准备');
+            } else {
+              // if the command is one of the suites
+              if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
+                console.log('suit: ' + command)
+                app.current_suit = command;
+              } else {
+                console.log('rank: ' + command)
+                app.current_rank = command;
+              }
+            }
+            console.log(command);
+          },
+          init_recognizer: async (app) => {
             const recognizer = await speechCommands.create(
               'BROWSER_FFT', undefined,
               'http://localhost:5500/model/play-cards.json',
@@ -77,6 +95,7 @@
               const maxScoreIndex = scores.indexOf(Math.max(...scores));
               const word = recognizer.wordLabels()[maxScoreIndex];
               const score = scores[maxScoreIndex];
+              app.add_command(word, app)
               console.log(word, score);
             }, {
               includeSpectrogram: true,
@@ -87,7 +106,7 @@
           },
         },
         mounted() {
-          this.init_recognizer();
+          this.init_recognizer(this);
           this.pick_cards(this);
           console.log('mounted');
         }
