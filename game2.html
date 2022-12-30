@@ -6,22 +6,28 @@
     <link rel="stylesheet" href="cards.css">
   </head>
   <body>
-    <div id="app">
-      <h1 class="title">记住后说 "记好了"; "下一个" 做下一道题;
-        <span class="final" id="current_result"></span>
-        <span class="final" id="final_span"></span>
-        <span class="interim" id="interim_span"></span>
-      </h1>
-
-      <div class="cards">
-        <section :class=card_class(card) :value=card.display v-for="card in cards">
-          <div class="card__inner card__inner--centered">
-            <div class="card__column">
-              <div class="card__symbol"></div>
-              <div class="card__symbol"></div>
+    <div id="app" class="container">
+      <div class="row">
+        <div class="cards col-12">
+          <section :class=card_class(card) :value=card.display v-for="card in cards">
+            <div class="card__inner card__inner--centered">
+              <div class="card__column">
+                <div class="card__symbol"></div>
+                <div class="card__symbol"></div>
+              </div>
             </div>
+          </section>
+        </div>
+        <div class="col">
+          <ul>
+            <li style="font-size: xx-large;">记住后说: "记好了"</li>
+            <li style="font-size: xx-large;">做下一道题说: "下一个" </li>
+          </ul>
+
+          <div>
+
           </div>
-        </section>
+        </div>
       </div>
     </div>
     <script src="//unpkg.com/jquery@3.1.1/dist/jquery.slim.min.js"></script>
@@ -44,10 +50,10 @@
         if (display === 11) display = 'J';
         if (display === 12) display = 'Q';
         if (display === 13) display = 'K';
-        deck.push({ value: i, display: display, suit: 'club', });
-        deck.push({ value: i, display: display, suit: 'diamond' });
-        deck.push({ value: i, display: display, suit: 'heart' });
-        deck.push({ value: i, display: display, suit: 'spade' });
+        deck.push({ value: '' + i, display: display, suit: 'club', });
+        deck.push({ value: '' + i, display: display, suit: 'diamond' });
+        deck.push({ value: '' + i, display: display, suit: 'heart' });
+        deck.push({ value: '' + i, display: display, suit: 'spade' });
       }
       var esg_nlp = new Vue({
         el: '#app',
@@ -74,7 +80,9 @@
               c.hidden = false;
               return c
             });
-            console.log(app.cards)
+            // log the cards to the console
+            console.log(app.cards.map(card => card.value + card.suit).join(' '));
+
           },
           add_command: (command, app) => {
             if (command === 'start') {
@@ -88,10 +96,25 @@
               // if the command is one of the suites
               if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
                 console.log('suit: ' + command)
-                app.current_suit = command;
+                app.current_suit = {command: command, tm: new Date()};
               } else {
                 console.log('rank: ' + command)
-                app.current_rank = command;
+                app.current_rank = {command: command, tm: new Date()};
+              }
+              // if the current_suit and current_rank are set and
+              // their tm are not off by more than 1 second, then it is an answer
+              if (app.current_suit && app.current_rank) {
+                if (Math.abs(app.current_suit.tm - app.current_rank.tm) < 2000) {
+                  // here we have an answer
+                  // find its match in app.cards
+                  console.log('answer: ' + app.current_rank.command + ' ' + app.current_suit.command)
+                  const card = app.cards.find(card => card.suit === app.current_suit.command && card.value === app.current_rank.command);
+                  if (card) {
+                    card.hidden = false;
+                  }
+                  app.current_suit = null;
+                  app.current_rank = null;
+                }
               }
             }
           },
