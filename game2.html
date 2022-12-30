@@ -26,8 +26,13 @@
             </ul>
           </div>
 
-          <div class="alert alert-primary" role="alert">
-            {{currentCardDisplay}}
+          <div>
+            <span class="alert alert-primary" role="alert">
+              {{suitMap[currentSuit?.command]}}
+            </span>
+            <span class="alert alert-primary" role="alert">
+              {{currentRank?.command}}
+            </span>
           </div>
 
           <div v-show=waiting>
@@ -73,7 +78,6 @@
           cards: [],
           currentRank: {},
           currentSuit: {},
-          currentCardDisplay: '',
           waiting: false,
           refresh_tm: Date.now(),
           suitMap: {
@@ -114,6 +118,7 @@
               }
               console.log('开始');
               app.pick_cards(esg_nlp);
+              app.waiting = false;
             } else if (command === 'ready') {
               // set the hidden for all the cards to true
               app.cards.forEach(card => card.hidden = true);
@@ -139,15 +144,18 @@
               // if the command is one of the suites
               if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
                 console.log('suit: ' + command)
+                if (app.currentSuit && app.currentSuit.command === command) {
+                  // if the same command is repeated, then ignore it
+                  return
+                }
                 app.currentSuit = {command: command, tm: new Date()};
               } else {
                 console.log('rank: ' + command)
+                if (app.currentRank && app.currentRank.command === command) {
+                  // if the same command is repeated, then ignore it
+                  return
+                }
                 app.currentRank = {command: command, tm: new Date()};
-              }
-
-              // set the display of the current word
-              if (app.currentSuit || app.currentRank) {
-                app.currentCardDisplay = (app.suitMap[app.currentSuit?.command] || '') + (app.currentRank?.command || '');
               }
 
               // if the currentSuit and currentRank are set and
@@ -185,7 +193,7 @@
             }, {
               includeSpectrogram: true,
               probabilityThreshold: 0.93,
-              overlapFactor: 0.6
+              overlapFactor: 0.5
             });
             return recognizer;
           },
