@@ -53,7 +53,9 @@
         el: '#app',
         data: {
           recognizer: null,
-          cards: [1],
+          cards: [],
+          current_rank: null,
+          current_suit: null,
         },
         methods: {
           pick_cards: (app) => {
@@ -75,16 +77,11 @@
               const maxScoreIndex = scores.indexOf(Math.max(...scores));
               const word = recognizer.wordLabels()[maxScoreIndex];
               const score = scores[maxScoreIndex];
-
-              // log top 3 words with their scores
-              const top3 = Array.from(scores)
-                .map((s, i) => ({ score: s, word: recognizer.wordLabels()[i] }))
-                .sort((s1, s2) => s2.score - s1.score)
               console.log(word, score);
             }, {
               includeSpectrogram: true,
               probabilityThreshold: 0.93,
-              overlapFactor: 0.7
+              overlapFactor: 0.6
             });
             return recognizer;
           },
