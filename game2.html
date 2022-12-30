@@ -14,7 +14,7 @@
       </h1>
 
       <div class="cards">
-        <section :class="'card card--' + card.suit" :value=card.display v-for="card in cards">
+        <section :class=card_class(card) :value=card.display v-for="card in cards">
           <div class="card__inner card__inner--centered">
             <div class="card__column">
               <div class="card__symbol"></div>
@@ -58,10 +58,22 @@
           current_suit: null,
         },
         methods: {
+          card_class: (card) => {
+            let classes = ['card', 'card--' + card.suit]
+            if (card.hidden) {
+              classes.push('card--flipped')
+            }
+            // join the classes into a string
+            return classes.join(' ')
+          },
           pick_cards: (app) => {
             // pick 5 distinct cards from the deck
             const shuffled = deck.sort(() => 0.5 - Math.random());
-            app.cards = shuffled.slice(0, 5);
+            app.cards = shuffled.slice(0, 5).map(card => {
+              c = Object.assign({}, card);
+              c.hidden = false;
+              return c
+            });
             console.log(app.cards)
           },
           add_command: (command, app) => {
@@ -69,6 +81,8 @@
               console.log('开始');
               app.pick_cards(esg_nlp);
             } else if (command === 'ready') {
+              // set the hidden for all the cards to true
+              app.cards.forEach(card => card.hidden = true);
               console.log('准备');
             } else {
               // if the command is one of the suites
@@ -80,7 +94,6 @@
                 app.current_rank = command;
               }
             }
-            console.log(command);
           },
           init_recognizer: async (app) => {
             const recognizer = await speechCommands.create(
