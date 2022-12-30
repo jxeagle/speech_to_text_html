@@ -75,6 +75,7 @@
           currentSuit: {},
           currentCardDisplay: '',
           waiting: false,
+          refresh_tm: Date.now(),
           suitMap: {
             'club': '梅花',
             'diamond': '方块',
@@ -104,7 +105,13 @@
 
           },
           add_command: (command, app) => {
+            if (app.waiting) {
+              return
+            }
             if (command === 'start') {
+              if (Date.now() - app.refresh_tm < 1000) {
+                return
+              }
               console.log('开始');
               app.pick_cards(esg_nlp);
             } else if (command === 'ready') {
@@ -121,12 +128,11 @@
 
               console.log('准备');
             } else {
-
               // remove the outdated commands
-              if ( (app.currentSuit && app.currentSuit.tm < new Date() - 2000)) {
+              if ( (app.currentSuit && app.currentSuit.tm < new Date() - 3000)) {
                 app.currentSuit = {};
               }
-              if ( (app.currentRank && app.currentRank.tm < new Date() - 2000)) {
+              if ( (app.currentRank && app.currentRank.tm < new Date() - 3000)) {
                 app.currentRank = {};
               }
 
@@ -147,7 +153,7 @@
               // if the currentSuit and currentRank are set and
               // their tm are not off by more than 1 second, then it is an answer
               if (app.currentSuit && app.currentRank) {
-                if (Math.abs(app.currentSuit.tm - app.currentRank.tm) < 2000) {
+                if (Math.abs(app.currentSuit.tm - app.currentRank.tm) < 3000) {
                   // here we have an answer
                   // find its match in app.cards
                   console.log('answer: ' + app.currentRank.command + ' ' + app.currentSuit.command)
