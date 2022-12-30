@@ -49,38 +49,10 @@
         deck.push({ value: i, display: display, suit: 'heart' });
         deck.push({ value: i, display: display, suit: 'spade' });
       }
-
-      const run = async () => {
-        const recognizer = await speechCommands.create(
-          'BROWSER_FFT', undefined,
-          'http://localhost:5500/model/play-cards.json',
-          'http://localhost:5500/model/play-cards.metadata.json');
-        await recognizer.ensureModelLoaded();
-        console.log(recognizer.wordLabels());
-        console.log('model loaded')
-
-        recognizer.listen(result => {
-          // log the word with the highest score
-          const scores = result.scores;
-          const maxScoreIndex = scores.indexOf(Math.max(...scores));
-          const word = recognizer.wordLabels()[maxScoreIndex];
-          const score = scores[maxScoreIndex];
-
-          // log top 3 words with their scores
-          const top3 = Array.from(scores)
-            .map((s, i) => ({ score: s, word: recognizer.wordLabels()[i] }))
-            .sort((s1, s2) => s2.score - s1.score)
-          console.log(word, score);
-        }, {
-          includeSpectrogram: true,
-          probabilityThreshold: 0.93,
-          overlapFactor: 0.7
-        });
-      }
-
       var esg_nlp = new Vue({
         el: '#app',
         data: {
+          recognizer: null,
           cards: [1],
         },
         methods: {
@@ -89,11 +61,37 @@
             const shuffled = deck.sort(() => 0.5 - Math.random());
             app.cards = shuffled.slice(0, 5);
             console.log(app.cards)
-          }
+          },
+          init_recognizer: async () => {
+            const recognizer = await speechCommands.create(
+              'BROWSER_FFT', undefined,
+              'http://localhost:5500/model/play-cards.json',
+              'http://localhost:5500/model/play-cards.metadata.json');
+            await recognizer.ensureModelLoaded();
+
+            recognizer.listen(result => {
+              // log the word with the highest score
+              const scores = result.scores;
+              const maxScoreIndex = scores.indexOf(Math.max(...scores));
+              const word = recognizer.wordLabels()[maxScoreIndex];
+              const score = scores[maxScoreIndex];
+
+              // log top 3 words with their scores
+              const top3 = Array.from(scores)
+                .map((s, i) => ({ score: s, word: recognizer.wordLabels()[i] }))
+                .sort((s1, s2) => s2.score - s1.score)
+              console.log(word, score);
+            }, {
+              includeSpectrogram: true,
+              probabilityThreshold: 0.93,
+              overlapFactor: 0.7
+            });
+            return recognizer;
+          },
         },
         mounted() {
+          this.init_recognizer();
           this.pick_cards(this);
-          run();
           console.log('mounted');
         }
       });
