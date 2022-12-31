@@ -127,6 +127,8 @@
               }
               console.log('开始');
               app.pick_cards(esg_nlp);
+              app.currentSuit = null;
+              app.currentRank = null;
               app.waiting = false;
             } else if (command === 'ready') {
               // set the hidden for all the cards to true
@@ -152,7 +154,7 @@
 
               // if the command is one of the suites
               if (['club', 'diamond', 'heart', 'spade'].includes(command)) {
-                console.log('suit: ' + command)
+                // console.log('suit: ' + command)
                 if (app.currentSuit && app.currentSuit.command === command) {
                   // if the same command is repeated, then ignore it
                   return
@@ -201,7 +203,7 @@
               console.log(word, score);
             }, {
               includeSpectrogram: true,
-              probabilityThreshold: 0.90,
+              probabilityThreshold: 0.95,
               overlapFactor: 0.5
             });
             return recognizer;
